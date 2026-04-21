@@ -4,7 +4,7 @@ on:
     inputs:
       ipa_url:
         description: "Direct URL to YouPro IPA"
-        default: "https://files.catbox.moe/z12fwl.ipa"
+        default: "https://files.catbox.moe/juAb12.ipa"
         required: true
         type: string
 
