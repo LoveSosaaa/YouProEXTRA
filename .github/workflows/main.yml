@@ -44,7 +44,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build IPA without YTLite
+    name: Build YouProEXTRA IPA
     runs-on: macos-latest
     permissions:
       contents: write
@@ -327,19 +327,19 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o YouPro.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          cyan -i youtube.ipa -o YouProEXTRA.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ytliteplusextra-ipa-noytlite${{ github.run_number }}
-          name: YouPro (${{ github.run_number }}) 
-          files: YouPro.ipa
+          tag_name: youproextra${{ github.run_number }}
+          name: YouProEXTRA (${{ github.run_number }}) 
+          files: YouProEXTRA.ipa
           draft: true
 
       - name: Job Summary - Build Conplete
         run: |
-          echo -e '### 🛠️ Build IPA wtihout YTLite Complete!' >> $GITHUB_STEP_SUMMARY
+          echo -e '### 🛠️ Build IPA wtihout YouProEXTRA Complete!' >> $GITHUB_STEP_SUMMARY
 
       - name: Job Summary - Output the Draft Release Link
         run: |
