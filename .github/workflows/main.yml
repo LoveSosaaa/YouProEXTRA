@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       ipa_url:
-        description: "https://files.catbox.moe/z12fwl.ipa"
-        default: ""
+        description: "Direct URL to YouPro IPA"
+        default: "https://files.catbox.moe/z12fwl.ipa"
         required: true
         type: string
 
