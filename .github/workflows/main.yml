@@ -57,9 +57,15 @@ jobs:
           
       - name: Download and Validate IPA
         run: |
-          wget "${{ inputs.ipa_url }}" --quiet --no-verbose -O youtube.ipa
+          curl -L --fail "${{ inputs.ipa_url }}" -o youtube.ipa
 
+          ls -lh youtube.ipa
           file_type=$(file --mime-type -b youtube.ipa)
+
+          if [[ ! -s youtube.ipa ]]; then
+            echo "::error::Validation failed: Downloaded file is empty."
+            exit 1
+          fi
 
           if [[ "$file_type" != "application/x-ios-app" && "$file_type" != "application/zip" ]]; then
             echo "::error::Validation failed: The downloaded file is not a valid IPA. Detected type: $file_type."
