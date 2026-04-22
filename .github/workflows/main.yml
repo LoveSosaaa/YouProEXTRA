@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       ipa_url:
-        description: "Direct URL to YouPro IPA"
+        description: "Direct URL to clean YouTube IPA"
         default: "https://files.catbox.moe/z12fwl.ipa"
         required: true
         type: string
@@ -32,6 +32,12 @@ on:
         required: false
         type: boolean
 
+      ytlite:
+        description: "Integrate YTLite 5.2b4"
+        default: true
+        required: false
+        type: boolean
+
       # volboost:
       #   description: "Integrate VolumeBoostYT (Require iOS 16+)"
       #   default: true
@@ -53,8 +59,8 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,demc,ytvid
-          
+          exclude_inputs: bundle_id,display_name,demc,ytvid,ytlite
+
       - name: Download and Validate IPA
         run: |
           curl -L --fail "${{ inputs.ipa_url }}" -o youtube.ipa
@@ -72,7 +78,7 @@ jobs:
             exit 1
           fi
 
-      - name: Get YouTube Version 
+      - name: Get YouTube Version
         run: |
           unzip -q youtube.ipa -d ytextracted
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
@@ -87,7 +93,7 @@ jobs:
 
       - name: Clone Theos
         run: git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
-           
+
       - name: Download iOS SDK
         run: |
           git clone --quiet --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
@@ -100,8 +106,8 @@ jobs:
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
           wget --quiet --no-verbose "https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac" -O /usr/local/bin/tbd
-          chmod +x /usr/local/bin/tbd 
-          
+          chmod +x /usr/local/bin/tbd
+
       - name: Clone Open in YouTube (Safari Extension)
         run: |
           git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
@@ -112,29 +118,29 @@ jobs:
 
       - name: Clone YouTubeHeader
         run: |
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
-           if [ "${{ inputs.demc }}" = "true" ]; then
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
+          if [ "${{ inputs.demc }}" = "true" ]; then
             cp -r "$THEOS/include/YouTubeHeader" "$THEOS/include/YTHeaders"
-           fi
+          fi
 
       - name: Clone PSHeader
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
 
       - name: Clone YouPiP
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
-    
+
       - name: Clone YTUHD
         run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD.git
-           
+
       - name: Clone Return-YouTube-Dislikes
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/Return-YouTube-Dislikes.git
 
       - name: Clone YouGroupSettings
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
-           
+
       - name: Clone YTVideoOverlay
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-          
+
       - name: Clone YTABConfig
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
 
@@ -147,14 +153,19 @@ jobs:
 
       - name: Clone YouMute
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouMute.git
-    
+
       - name: Clone YouLoop
         run: git clone --quiet --depth=1 https://github.com/bhackel/YouLoop.git
 
       - name: Clone Alderis
         run: git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
 
+      - name: Clone YTLite
+        if: ${{ inputs.ytlite }}
+        run: git clone --quiet https://github.com/dayanch96/YTLite.git
+
       - name: Clone iSponsorBlock
+        if: ${{ !inputs.ytlite }}
         run: git clone --quiet --depth=1 --recurse-submodules https://github.com/Galactic-Dev/iSponsorBlock.git
 
       - name: Clone YouSlider
@@ -177,7 +188,7 @@ jobs:
 
       - name: Clone YouGetCaption
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouGetCaption.git
-        
+
       - name: Clone YTFlags
         run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTFlags.git
 
@@ -191,12 +202,12 @@ jobs:
       # - name: Clone VolumeBoostYT
       #   if: ${{ inputs.volboost }}
       #   run: git clone --quiet --depth=1 https://github.com/VasirakCalgux/VolumeBoostYT.git
-        
+
       - name: Build YouPiP
         run: |
           cd YouPiP
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youpip.deb    
+          mv packages/*.deb ${{ github.workspace }}/youpip.deb
 
       - name: Build YTUHD
         run: |
@@ -265,11 +276,19 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/alderis.deb
 
+      - name: Build YTLite 5.2b4
+        if: ${{ inputs.ytlite }}
+        run: |
+          cd YTLite
+          git checkout 5ffbf4c
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytlite.deb
+
       - name: Build iSponsorBlock
+        if: ${{ !inputs.ytlite }}
         run: |
           cd iSponsorBlock
           sed -i '' 's/^TARGET := iphone:clang:16.5:13.0$/TARGET := iphone:clang:18.6:13.0/' Makefile
-          cat Makefile
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb
 
@@ -284,14 +303,14 @@ jobs:
         run: |
           cd YTSilentVote
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytnovote.deb  
+          mv packages/*.deb ${{ github.workspace }}/ytnovote.deb
 
       - name: Build YouShare
         run: |
           cd YouShare
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youshare.deb
-          
+
       - name: Build Gonerino
         run: |
           cd Gonerino
@@ -315,7 +334,6 @@ jobs:
           cd YTFlags
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytflags.deb
-          
 
       - name: Build YTVideoErrorAlert
         if: ${{ inputs.ytvid }}
@@ -330,7 +348,7 @@ jobs:
       #     cd VolumeBoostYT
       #     make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
       #     mv packages/*.deb ${{ github.workspace }}/volboostyt.deb
-          
+
       - name: Inject Tweaks Into IPA
         run: |
           tweaks="OpenYouTubeSafariExtension.appex"
@@ -338,25 +356,25 @@ jobs:
           for f in *.deb; do
             tweaks="$tweaks $f"
           done
-          
+
           cyan -i youtube.ipa -o YouProEXTRA.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: youproextra${{ github.run_number }}
-          name: YouProEXTRA (${{ github.run_number }}) 
+          name: YouProEXTRA (${{ github.run_number }})
           files: YouProEXTRA.ipa
           draft: true
 
-      - name: Job Summary - Build Conplete
+      - name: Job Summary - Build Complete
         run: |
-          echo -e '### 🛠️ Build IPA wtihout YouProEXTRA Complete!' >> $GITHUB_STEP_SUMMARY
+          echo -e '### 🛠️ Build YouTube IPA Complete!' >> $GITHUB_STEP_SUMMARY
 
       - name: Job Summary - Output the Draft Release Link
         run: |
-          echo -e '### 🚀 Draft Release\n\nDraft release has been created successfully! You can view your release here: https://github.com/${{ github.repository }}/releases' >> $GITHUB_STEP_SUMMARY     
-          
+          echo -e '### 🚀 Draft Release\n\nDraft release has been created successfully! You can view your release here: https://github.com/${{ github.repository }}/releases' >> $GITHUB_STEP_SUMMARY
+
       - name: Job Summary - Cleanup
         run: |
-          echo -e '### 🧹 Cleanup\n\nYou can remove previous GitHub Actions run here: https://github.com/${{ github.repository }}/actions/workflows/delete-old-workflows-run.yml And if you want to delelte old draft releases you have then here: https://github.com/${{ github.repository }}/actions/workflows/delete-old-draft-releases.yml' >> $GITHUB_STEP_SUMMARY
+          echo -e '### 🧹 Cleanup\n\nYou can remove previous GitHub Actions runs here: https://github.com/${{ github.repository }}/actions And if you want to delete old draft releases, go here: https://github.com/${{ github.repository }}/releases' >> $GITHUB_STEP_SUMMARY
