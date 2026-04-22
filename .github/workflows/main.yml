@@ -148,6 +148,9 @@ jobs:
       - name: Clone Alderis
         run: git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
 
+      - name: Clone iSponsorBlock
+        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/Galactic-Dev/iSponsorBlock.git    
+
       - name: Clone YouSlider
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouSlider.git
 
@@ -255,6 +258,14 @@ jobs:
           cd Alderis
           make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/alderis.deb
+
+      - name: Build iSponsorBlock
+        run: |
+          cd iSponsorBlock
+          sed -i '' 's/^TARGET := iphone:clang:16.5:13.0$/TARGET := iphone:clang:18.6:13.0/' Makefile
+          cat Makefile
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb          
 
       - name: Build YouChooseQuality
         run: |
