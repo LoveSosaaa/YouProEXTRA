@@ -281,9 +281,9 @@ jobs:
         run: |
           cd YTLite
           git checkout 5ffbf4c
-          sed -i '' 's/^TARGET := iphone:clang:16.5:15.0$/TARGET := iphone:clang:18.6:15.0/' Makefile || true
-          sed -i '' 's/iPhoneOS16.5/iPhoneOS18.6/g' Makefile || true
-          cat Makefile
+          find . -type f \( -name "Makefile" -o -name "*.mk" \) -exec sed -i '' 's/iPhoneOS16.5/iPhoneOS18.6/g' {} +
+          find . -type f \( -name "Makefile" -o -name "*.mk" \) -exec sed -i '' 's/iphone:clang:16.5:/iphone:clang:18.6:/g' {} +
+          grep -R "iPhoneOS16.5\|iphone:clang:16.5" . || true
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SDKVERSION=18.6
           mv packages/*.deb ${{ github.workspace }}/ytlite.deb
 
