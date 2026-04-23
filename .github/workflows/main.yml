@@ -50,6 +50,11 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+    
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
@@ -147,52 +152,77 @@ jobs:
       - name: Get latest commit hashes for all tweaks
         id: tweak_hashes
         run: |
-          echo "youpip=$(git ls-remote https://github.com/PoomSmart/YouPiP.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ytuhd=$(git ls-remote https://github.com/Tonwalter888/YTUHD.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ryd=$(git ls-remote https://github.com/PoomSmart/Return-YouTube-Dislikes.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "yougroupsettings=$(git ls-remote https://github.com/PoomSmart/YouGroupSettings.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ytvideooverlay=$(git ls-remote https://github.com/PoomSmart/YTVideoOverlay.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "alderis=$(git ls-remote https://github.com/hbang/Alderis.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "isponsorblock=$(git ls-remote https://github.com/Galactic-Dev/iSponsorBlock.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ytabconfig=$(git ls-remote https://github.com/PoomSmart/YTABConfig.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youspeed=$(git ls-remote https://github.com/PoomSmart/YouSpeed.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youmute=$(git ls-remote https://github.com/PoomSmart/YouMute.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youloop=$(git ls-remote https://github.com/bhackel/YouLoop.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youtweaks=$(git ls-remote https://github.com/fosterbarnes/YTweaks.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "yougetcaption=$(git ls-remote https://github.com/PoomSmart/YouGetCaption.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ytflags=$(git ls-remote https://github.com/Tonwalter888/YTFlags.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "iamyoutube=$(git ls-remote https://github.com/PoomSmart/IAmYouTube.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "demc=$(git ls-remote https://github.com/therealFoxster/DontEatMyContent.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ytvideoerroralert=$(git ls-remote https://github.com/PoomSmart/YTVideoErrorAlert.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youshare=$(git ls-remote https://github.com/Tonwalter888/YouShare.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "gonerino=$(git ls-remote https://github.com/castdrian/Gonerino.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youslider=$(git ls-remote https://github.com/PoomSmart/YouSlider.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "youchoosequality=$(git ls-remote https://github.com/PoomSmart/YouChooseQuality.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          echo "ytsilentvote=$(git ls-remote https://github.com/PoomSmart/YTSilentVote.git HEAD | cut -f1)" >> $GITHUB_OUTPUT
-          
+          youpip=$(git ls-remote https://github.com/PoomSmart/YouPiP.git HEAD | cut -f1)
+          ytuhd=$(git ls-remote https://github.com/Tonwalter888/YTUHD.git HEAD | cut -f1)
+          ryd=$(git ls-remote https://github.com/PoomSmart/Return-YouTube-Dislikes.git HEAD | cut -f1)
+          yougroupsettings=$(git ls-remote https://github.com/PoomSmart/YouGroupSettings.git HEAD | cut -f1)
+          ytvideooverlay=$(git ls-remote https://github.com/PoomSmart/YTVideoOverlay.git HEAD | cut -f1)
+          alderis=$(git ls-remote https://github.com/hbang/Alderis.git HEAD | cut -f1)
+          isponsorblock=$(git ls-remote https://github.com/Galactic-Dev/iSponsorBlock.git HEAD | cut -f1)
+          ytabconfig=$(git ls-remote https://github.com/PoomSmart/YTABConfig.git HEAD | cut -f1)
+          youspeed=$(git ls-remote https://github.com/PoomSmart/YouSpeed.git HEAD | cut -f1)
+          youmute=$(git ls-remote https://github.com/PoomSmart/YouMute.git HEAD | cut -f1)
+          youloop=$(git ls-remote https://github.com/bhackel/YouLoop.git HEAD | cut -f1)
+          youtweaks=$(git ls-remote https://github.com/fosterbarnes/YTweaks.git HEAD | cut -f1)
+          yougetcaption=$(git ls-remote https://github.com/PoomSmart/YouGetCaption.git HEAD | cut -f1)
+          ytflags=$(git ls-remote https://github.com/Tonwalter888/YTFlags.git HEAD | cut -f1)
+          iamyoutube=$(git ls-remote https://github.com/PoomSmart/IAmYouTube.git HEAD | cut -f1)
+          demc=$(git ls-remote https://github.com/therealFoxster/DontEatMyContent.git HEAD | cut -f1)
+          ytvideoerroralert=$(git ls-remote https://github.com/PoomSmart/YTVideoErrorAlert.git HEAD | cut -f1)
+          youshare=$(git ls-remote https://github.com/Tonwalter888/YouShare.git HEAD | cut -f1)
+          gonerino=$(git ls-remote https://github.com/castdrian/Gonerino.git HEAD | cut -f1)
+          youslider=$(git ls-remote https://github.com/PoomSmart/YouSlider.git HEAD | cut -f1)
+          youchoosequality=$(git ls-remote https://github.com/PoomSmart/YouChooseQuality.git HEAD | cut -f1)
+          ytsilentvote=$(git ls-remote https://github.com/PoomSmart/YTSilentVote.git HEAD | cut -f1)
+
           {
-            echo "youpip:${{ steps.tweak_hashes.outputs.youpip || '0' }}"
-            echo "ytuhd:${{ steps.tweak_hashes.outputs.ytuhd || '0' }}"
-            echo "ryd:${{ steps.tweak_hashes.outputs.ryd || '0' }}"
-            echo "yougroupsettings:${{ steps.tweak_hashes.outputs.yougroupsettings || '0' }}"
-            echo "ytvideooverlay:${{ steps.tweak_hashes.outputs.ytvideooverlay || '0' }}"
-            echo "alderis:${{ steps.tweak_hashes.outputs.alderis || '0' }}"
-            echo "isponsorblock:${{ steps.tweak_hashes.outputs.isponsorblock || '0' }}"
-            echo "ytabconfig:${{ steps.tweak_hashes.outputs.ytabconfig || '0' }}"
-            echo "youspeed:${{ steps.tweak_hashes.outputs.youspeed || '0' }}"
-            echo "youmute:${{ steps.tweak_hashes.outputs.youmute || '0' }}"
-            echo "youloop:${{ steps.tweak_hashes.outputs.youloop || '0' }}"
-            echo "youtweaks:${{ steps.tweak_hashes.outputs.youtweaks || '0' }}"
-            echo "yougetcaption:${{ steps.tweak_hashes.outputs.yougetcaption || '0' }}"
-            echo "ytflags:${{ steps.tweak_hashes.outputs.ytflags || '0' }}"
-            echo "iamyoutube:${{ steps.tweak_hashes.outputs.iamyoutube || '0' }}"
-            echo "demc:${{ steps.tweak_hashes.outputs.demc || '0' }}"
-            echo "ytvideoerroralert:${{ steps.tweak_hashes.outputs.ytvideoerroralert || '0' }}"
-            echo "youshare:${{ steps.tweak_hashes.outputs.youshare || '0' }}"
-            echo "gonerino:${{ steps.tweak_hashes.outputs.gonerino || '0' }}"
-            echo "youslider:${{ steps.tweak_hashes.outputs.youslider || '0' }}"
-            echo "youchoosequality:${{ steps.tweak_hashes.outputs.youchoosequality || '0' }}"
-            echo "ytsilentvote:${{ steps.tweak_hashes.outputs.ytsilentvote || '0' }}"
+            echo "youpip=$youpip"
+            echo "ytuhd=$ytuhd"
+            echo "ryd=$ryd"
+            echo "yougroupsettings=$yougroupsettings"
+            echo "ytvideooverlay=$ytvideooverlay"
+            echo "alderis=$alderis"
+            echo "isponsorblock=$isponsorblock"
+            echo "ytabconfig=$ytabconfig"
+            echo "youspeed=$youspeed"
+            echo "youmute=$youmute"
+            echo "youloop=$youloop"
+            echo "youtweaks=$youtweaks"
+            echo "yougetcaption=$yougetcaption"
+            echo "ytflags=$ytflags"
+            echo "iamyoutube=$iamyoutube"
+            echo "demc=$demc"
+            echo "ytvideoerroralert=$ytvideoerroralert"
+            echo "youshare=$youshare"
+            echo "gonerino=$gonerino"
+            echo "youslider=$youslider"
+            echo "youchoosequality=$youchoosequality"
+            echo "ytsilentvote=$ytsilentvote"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "youpip:$youpip"
+            echo "ytuhd:$ytuhd"
+            echo "ryd:$ryd"
+            echo "yougroupsettings:$yougroupsettings"
+            echo "ytvideooverlay:$ytvideooverlay"
+            echo "alderis:$alderis"
+            echo "isponsorblock:$isponsorblock"
+            echo "ytabconfig:$ytabconfig"
+            echo "youspeed:$youspeed"
+            echo "youmute:$youmute"
+            echo "youloop:$youloop"
+            echo "youtweaks:$youtweaks"
+            echo "yougetcaption:$yougetcaption"
+            echo "ytflags:$ytflags"
+            echo "iamyoutube:$iamyoutube"
+            echo "demc:$demc"
+            echo "ytvideoerroralert:$ytvideoerroralert"
+            echo "youshare:$youshare"
+            echo "gonerino:$gonerino"
+            echo "youslider:$youslider"
+            echo "youchoosequality:$youchoosequality"
+            echo "ytsilentvote:$ytsilentvote"
           } > tweak_hashes.txt
 
       - name: Cache All Tweaks
@@ -271,7 +301,8 @@ jobs:
         run: git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
 
       - name: Clone iSponsorBlock
-        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/Galactic-Dev/iSponsorBlock.git        
+        if: steps.cache_tweaks.outputs.cache-hit != 'true'
+        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/Galactic-Dev/iSponsorBlock.git       
 
       - name: Clone YouSlider
         if: steps.cache_tweaks.outputs.cache-hit != 'true'
@@ -464,20 +495,17 @@ jobs:
           
       - name: Inject Tweaks Into IPA
         run: |
-          ls -la ${{ github.workspace }}/tweaks/
+          echo "Workspace: ${{ github.workspace }}"
+          ls -la "${{ github.workspace }}"
+          ls -la "${{ github.workspace }}/tweaks"
 
           DYLIB_PATH="${{ github.workspace }}/tweaks/YouPro_Patched.dylib"
           BUNDLE_PATH="${{ github.workspace }}/tweaks/YouPro.bundle"
 
-          tweaks="OpenYouTubeSafariExtension.appex"
+          [ -f "$DYLIB_PATH" ] || { echo "Missing $DYLIB_PATH"; exit 1; }
+          [ -d "$BUNDLE_PATH" ] || { echo "Missing $BUNDLE_PATH"; exit 1; }
 
-          if [ -f "$DYLIB_PATH" ]; then
-            tweaks="$tweaks $DYLIB_PATH"
-          fi
-
-          if [ -d "$BUNDLE_PATH" ]; then
-            tweaks="$tweaks $BUNDLE_PATH"
-          fi
+          tweaks="OpenYouTubeSafariExtension.appex $DYLIB_PATH $BUNDLE_PATH"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
@@ -486,7 +514,7 @@ jobs:
           done
 
           echo "$tweaks"
-          cyan -i youtube.ipa -o YouProEXTRA.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          cyan -i youtube.ipa -o YouProEXTRA.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b "${{ inputs.bundle_id }}"
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
