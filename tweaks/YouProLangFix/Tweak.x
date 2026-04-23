@@ -75,6 +75,17 @@ static void YouProFixViewTexts(UIView *view) {
             [button setTitle:fixed forState:UIControlStateSelected];
             [button setTitle:fixed forState:UIControlStateDisabled];
         }
+
+        NSString *text = button.currentTitle;
+
+        if ([text isEqualToString:@"تنزيل"]) {
+           [button setTitle:@"Download" forState:UIControlStateNormal];
+           [button setTitle:@"Download" forState:UIControlStateHighlighted];
+           [button setTitle:@"Download" forState:UIControlStateSelected];
+           [button setTitle:@"Download" forState:UIControlStateDisabled];
+
+           [button setAttributedTitle:nil forState:UIControlStateNormal];
+        }
     }
 
     for (UIView *subview in view.subviews) {
