@@ -57,12 +57,14 @@ static void YouProFixViewTexts(UIView *view) {
 
 - (void)viewDidLoad {
     %orig;
-    YouProFixViewTexts((UIView *)self.view);
+    UIView *rootView = [(UIViewController *)self view];
+    YouProFixViewTexts(rootView);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     %orig(animated);
-    YouProFixViewTexts((UIView *)self.view);
+    UIView *rootView = [(UIViewController *)self view];
+    YouProFixViewTexts(rootView);
 }
 
 %end
