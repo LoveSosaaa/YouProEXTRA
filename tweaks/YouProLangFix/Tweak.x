@@ -4,6 +4,7 @@
 static NSString *YouProEnglishify(NSString *text) {
     if (!text || ![text isKindOfClass:[NSString class]]) return text;
 
+    // Quality labels
     if ([text containsString:@"4K"]) return @"4K";
     if ([text containsString:@"2160p"]) return @"2160p";
     if ([text containsString:@"1440p"]) return @"1440p";
@@ -14,12 +15,29 @@ static NSString *YouProEnglishify(NSString *text) {
     if ([text containsString:@"240p"]) return @"240p";
     if ([text containsString:@"144p"]) return @"144p";
 
+    // Title + buttons
     if ([text isEqualToString:@"جودة التنزيل"]) return @"Download Quality";
     if ([text isEqualToString:@"تنزيل"]) return @"Download";
     if ([text isEqualToString:@"إلغاء"]) return @"Cancel";
 
+    // Convert Arabic MB to MB
     if ([text containsString:@"م.ب"]) {
-        return [text stringByReplacingOccurrencesOfString:@"م.ب" withString:@"MB"];
+        text = [text stringByReplacingOccurrencesOfString:@"م.ب" withString:@"MB"];
+    }
+
+    // Convert MB to GB using 1024
+    if ([text containsString:@"MB"]) {
+        NSScanner *scanner = [NSScanner scannerWithString:text];
+        double value = 0;
+
+        if ([scanner scanDouble:&value]) {
+            if (value >= 1024.0) {
+                double gb = value / 1024.0;
+                return [NSString stringWithFormat:@"%.1f GB", gb];
+            } else {
+                return [NSString stringWithFormat:@"%.0f MB", value];
+            }
+        }
     }
 
     return text;
@@ -33,9 +51,29 @@ static void YouProFixViewTexts(UIView *view) {
         label.text = YouProEnglishify(label.text);
     } else if ([view isKindOfClass:[UIButton class]]) {
         UIButton *button = (UIButton *)view;
-        NSString *normal = [button titleForState:UIControlStateNormal];
-        if (normal) {
-            [button setTitle:YouProEnglishify(normal) forState:UIControlStateNormal];
+
+        NSArray *states = @[
+            @(UIControlStateNormal),
+            @(UIControlStateHighlighted),
+            @(UIControlStateSelected),
+            @(UIControlStateDisabled)
+        ];
+
+        for (NSNumber *stateNumber in states) {
+            UIControlState state = (UIControlState)[stateNumber unsignedIntegerValue];
+            NSString *title = [button titleForState:state];
+            if (title) {
+                [button setTitle:YouProEnglishify(title) forState:state];
+            }
+        }
+
+        NSString *currentTitle = button.currentTitle;
+        if (currentTitle) {
+            NSString *fixed = YouProEnglishify(currentTitle);
+            [button setTitle:fixed forState:UIControlStateNormal];
+            [button setTitle:fixed forState:UIControlStateHighlighted];
+            [button setTitle:fixed forState:UIControlStateSelected];
+            [button setTitle:fixed forState:UIControlStateDisabled];
         }
     }
 
