@@ -7,7 +7,7 @@
 - Added `Checkout repository`
 - Updated `Get latest commit hashes for all tweaks`
 - Improved `Inject Tweaks Into IPA`
-- Add YouProLangFix
+- Add `YouProLangFix`
 ## Version
 
 Latest confirmed: 21.16.2
