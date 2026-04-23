@@ -153,3 +153,29 @@ static void YouProFixViewTexts(UIView *view) {
 }
 
 %end
+
+%hook UIButton
+
+- (void)setTitle:(NSString *)title forState:(UIControlState)state {
+    %orig(title ? YouProEnglishify(title) : nil, state);
+}
+
+- (void)setAttributedTitle:(NSAttributedString *)title forState:(UIControlState)state {
+    if (title && title.length > 0) {
+        NSString *raw = title.string;
+        NSString *fixed = YouProEnglishify(raw);
+
+        if (![raw isEqualToString:fixed]) {
+            NSMutableAttributedString *newAttr =
+                [[NSMutableAttributedString alloc] initWithAttributedString:title];
+            [newAttr replaceCharactersInRange:NSMakeRange(0, newAttr.length)
+                                  withString:fixed];
+            %orig(newAttr, state);
+            return;
+        }
+    }
+
+    %orig(title, state);
+}
+
+%end
