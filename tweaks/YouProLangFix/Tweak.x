@@ -118,6 +118,9 @@ static void YouProFixViewTexts(UIView *view) {
             [button setTitle:@"Download" forState:UIControlStateDisabled];
 
             [button setAttributedTitle:nil forState:UIControlStateNormal];
+            [button setAttributedTitle:nil forState:UIControlStateHighlighted];
+            [button setAttributedTitle:nil forState:UIControlStateSelected];
+            [button setAttributedTitle:nil forState:UIControlStateDisabled];
         }
     }
 
