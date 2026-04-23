@@ -61,9 +61,24 @@ static void YouProFixViewTexts(UIView *view) {
 
         for (NSNumber *stateNumber in states) {
             UIControlState state = (UIControlState)[stateNumber unsignedIntegerValue];
+
             NSString *title = [button titleForState:state];
             if (title) {
                 [button setTitle:YouProEnglishify(title) forState:state];
+            }
+
+            NSAttributedString *attrTitle = [button attributedTitleForState:state];
+            if (attrTitle.length > 0) {
+                NSString *raw = attrTitle.string;
+                NSString *fixed = YouProEnglishify(raw);
+
+                if (![raw isEqualToString:fixed]) {
+                    NSMutableAttributedString *newAttr =
+                        [[NSMutableAttributedString alloc] initWithAttributedString:attrTitle];
+                    [newAttr replaceCharactersInRange:NSMakeRange(0, newAttr.length)
+                                          withString:fixed];
+                    [button setAttributedTitle:newAttr forState:state];
+                }
             }
         }
 
@@ -76,15 +91,33 @@ static void YouProFixViewTexts(UIView *view) {
             [button setTitle:fixed forState:UIControlStateDisabled];
         }
 
+        NSAttributedString *currentAttr = button.currentAttributedTitle;
+        if (currentAttr.length > 0) {
+            NSString *raw = currentAttr.string;
+            NSString *fixed = YouProEnglishify(raw);
+
+            if (![raw isEqualToString:fixed]) {
+                NSMutableAttributedString *newAttr =
+                    [[NSMutableAttributedString alloc] initWithAttributedString:currentAttr];
+                [newAttr replaceCharactersInRange:NSMakeRange(0, newAttr.length)
+                                      withString:fixed];
+
+                [button setAttributedTitle:newAttr forState:UIControlStateNormal];
+                [button setAttributedTitle:newAttr forState:UIControlStateHighlighted];
+                [button setAttributedTitle:newAttr forState:UIControlStateSelected];
+                [button setAttributedTitle:newAttr forState:UIControlStateDisabled];
+            }
+        }
+
         NSString *text = button.currentTitle;
 
         if ([text isEqualToString:@"تنزيل"]) {
-           [button setTitle:@"Download" forState:UIControlStateNormal];
-           [button setTitle:@"Download" forState:UIControlStateHighlighted];
-           [button setTitle:@"Download" forState:UIControlStateSelected];
-           [button setTitle:@"Download" forState:UIControlStateDisabled];
+            [button setTitle:@"Download" forState:UIControlStateNormal];
+            [button setTitle:@"Download" forState:UIControlStateHighlighted];
+            [button setTitle:@"Download" forState:UIControlStateSelected];
+            [button setTitle:@"Download" forState:UIControlStateDisabled];
 
-           [button setAttributedTitle:nil forState:UIControlStateNormal];
+            [button setAttributedTitle:nil forState:UIControlStateNormal];
         }
     }
 
