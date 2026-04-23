@@ -3,7 +3,7 @@ Name: YouProLangFix
 Version: 1.0
 Architecture: iphoneos-arm
 Description: Force English labels in YouPro download menu
-Maintainer: You
-Author: You
+Maintainer: JuDeer
+Author: JuDeer
 Section: Tweaks
 Depends: mobilesubstrate
