@@ -1,6 +1,6 @@
 ## Credits
 
-To [mrdrvt99](https://github.com/mrdrvt99/YouProEXTRA)
+[mrdrvt99](https://github.com/mrdrvt99/YouProEXTRA)
 
 ## My Changes
 
