@@ -140,8 +140,9 @@ static void YouProFixViewTexts(UIView *view) {
 
 %hook YouProQualitySheet
 
-- (void)viewDidLoad {
-    %orig;
+- (void)viewWillAppear:(BOOL)animated {
+    %orig(animated);
+
     UIView *rootView = [(UIViewController *)self view];
     YouProFixViewTexts(rootView);
 }
