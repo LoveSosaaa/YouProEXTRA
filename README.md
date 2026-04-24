@@ -21,14 +21,16 @@ Added extra features just like YTLitePlusEXTRA but for completely free
 
 ## My Changes
 
-- Added Checkout repository
-- Updated Get latest commit hashes for all tweaks
-- Improved Inject Tweaks Into IPA
-- Updated YTUDH to latest
-- Fixed videos quality section
-- Added YouProLangFix - English
-- Added iSponsorBlock
-- Fixed MB to GB Conversion
+### ✨ Changes
+
+- Added **Checkout repository** step
+- Updated **Get latest commit hashes** for all tweaks
+- Improved **Inject Tweaks Into IPA** process
+- Updated **YTUHD** to latest version
+- Fixed **video quality display**
+- Added **YouProLangFix** (English UI support)
+- Added **iSponsorBlock**
+- Improved **file size conversion (MB → GB)**
   
 ## Version
 
