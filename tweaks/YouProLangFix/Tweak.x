@@ -194,6 +194,39 @@ static void YouProFixViewTexts(UIView *view) {
         }
     } @catch (NSException *e) {
     }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            UIButton *dlBtn = [(id)self valueForKey:@"dlBtn"];
+            if ([dlBtn isKindOfClass:[UIButton class]]) {
+                [dlBtn setTitle:@"Download" forState:UIControlStateNormal];
+                [dlBtn setTitle:@"Download" forState:UIControlStateHighlighted];
+                [dlBtn setTitle:@"Download" forState:UIControlStateSelected];
+                [dlBtn setTitle:@"Download" forState:UIControlStateDisabled];
+
+                [dlBtn setAttributedTitle:nil forState:UIControlStateNormal];
+                [dlBtn setAttributedTitle:nil forState:UIControlStateHighlighted];
+                [dlBtn setAttributedTitle:nil forState:UIControlStateSelected];
+                [dlBtn setAttributedTitle:nil forState:UIControlStateDisabled];
+
+                if (dlBtn.titleLabel) {
+                    dlBtn.titleLabel.text = @"Download";
+                    dlBtn.titleLabel.attributedText = nil;
+                }
+
+                for (UIView *sub in dlBtn.subviews) {
+                    if ([sub isKindOfClass:[UILabel class]]) {
+                        UILabel *lbl = (UILabel *)sub;
+                        lbl.text = @"Download";
+                        lbl.attributedText = nil;
+                    }
+                }
+
+                [dlBtn layoutIfNeeded];
+            }
+        } @catch (NSException *e) {
+        }
+    });
 }
 
 %end
