@@ -19,6 +19,18 @@ Added extra features just like YTLitePlusEXTRA but for completely free
 - [YTFlags](https://github.com/Tonwalter888/YTFlags) - Tries to make your YouTube experience even better
 - [iSponsorBlock](https://github.com/Galactic-Dev/iSponsorBlock) - Skip sponsorships 
 
+## My Changes
+
+- Added `Checkout repository`
+- Updated `Get latest commit hashes for all tweaks`
+- Improved `Inject Tweaks Into IPA`
+- Add `YouProLangFix - English`
+- Add MB to GB Conversion
+  
+## Version
+
+Latest confirmed: 21.16.2
+
 # Credits
 
 [Alibusut](https://t.me/alibusut)
