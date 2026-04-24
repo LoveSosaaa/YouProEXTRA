@@ -153,7 +153,7 @@ static void YouProFixViewTexts(UIView *view) {
     YouProFixViewTexts(rootView);
 
     @try {
-        UIButton *dlBtn = [self valueForKey:@"dlBtn"];
+        UIButton *dlBtn = [(id)self valueForKey:@"dlBtn"];
         if ([dlBtn isKindOfClass:[UIButton class]]) {
             [dlBtn setTitle:@"Download" forState:UIControlStateNormal];
             [dlBtn setTitle:@"Download" forState:UIControlStateHighlighted];
@@ -167,10 +167,19 @@ static void YouProFixViewTexts(UIView *view) {
 
             if (dlBtn.titleLabel) {
                 dlBtn.titleLabel.text = @"Download";
+                dlBtn.titleLabel.attributedText = nil;
+            }
+
+            for (UIView *sub in dlBtn.subviews) {
+                if ([sub isKindOfClass:[UILabel class]]) {
+                    UILabel *lbl = (UILabel *)sub;
+                    lbl.text = @"Download";
+                    lbl.attributedText = nil;
+                }
             }
         }
 
-        UIButton *canBtn = [self valueForKey:@"canBtn"];
+        UIButton *canBtn = [(id)self valueForKey:@"canBtn"];
         if ([canBtn isKindOfClass:[UIButton class]]) {
             [canBtn setTitle:@"Cancel" forState:UIControlStateNormal];
             [canBtn setTitle:@"Cancel" forState:UIControlStateHighlighted];
@@ -179,6 +188,7 @@ static void YouProFixViewTexts(UIView *view) {
 
             if (canBtn.titleLabel) {
                 canBtn.titleLabel.text = @"Cancel";
+                canBtn.titleLabel.attributedText = nil;
             }
         }
     } @catch (NSException *e) {
