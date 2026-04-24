@@ -32,12 +32,6 @@ on:
         required: false
         type: boolean
 
-      # volboost:
-      #   description: "Integrate VolumeBoostYT (Require iOS 16+)"
-      #   default: true
-      #   required: false
-      #   type: boolean
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -71,10 +65,24 @@ jobs:
             exit 1
           fi
 
-      - name: Get YouTube Version 
+      - name: Get YouTube Version
         run: |
           unzip -q youtube.ipa -d ytextracted
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
+
+      - name: Backup original PlugIns
+        run: |
+          rm -rf original_ipa
+          unzip -q youtube.ipa -d original_ipa
+          echo "Original app contents:"
+          ls -la original_ipa/Payload/YouTube.app || true
+          echo "Original PlugIns:"
+          ls -la original_ipa/Payload/YouTube.app/PlugIns || true
+
+          if [ ! -d "original_ipa/Payload/YouTube.app/PlugIns" ]; then
+            echo "::error::Original IPA is missing Payload/YouTube.app/PlugIns"
+            exit 1
+          fi
 
       - name: Install Dependencies
         run: brew install make ldid swiftlint
@@ -120,7 +128,7 @@ jobs:
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
           wget --quiet --no-verbose "https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac" -O /usr/local/bin/tbd
-          chmod +x /usr/local/bin/tbd 
+          chmod +x /usr/local/bin/tbd
           
       - name: Clone Open in YouTube (Safari Extension)
         run: |
@@ -302,7 +310,7 @@ jobs:
 
       - name: Clone iSponsorBlock
         if: steps.cache_tweaks.outputs.cache-hit != 'true'
-        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/Galactic-Dev/iSponsorBlock.git       
+        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/Galactic-Dev/iSponsorBlock.git
 
       - name: Clone YouSlider
         if: steps.cache_tweaks.outputs.cache-hit != 'true'
@@ -344,10 +352,6 @@ jobs:
         if: ${{ inputs.ytvid && steps.cache_tweaks.outputs.cache-hit != 'true' }}
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoErrorAlert.git
 
-      # - name: Clone VolumeBoostYT
-      #   if: ${{ inputs.volboost }}
-      #   run: git clone --quiet --depth=1 https://github.com/VasirakCalgux/VolumeBoostYT.git
-        
       - name: Build YouPiP
         run: |
           if [ ! -d "YTVideoOverlay" ]; then
@@ -432,9 +436,8 @@ jobs:
         run: |
           cd iSponsorBlock
           sed -i '' 's/^TARGET := iphone:clang:16.5:13.0$/TARGET := iphone:clang:18.6:13.0/' Makefile
-          cat Makefile
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb          
+          mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb
 
       - name: Build YouChooseQuality
         run: |
@@ -446,7 +449,7 @@ jobs:
         run: |
           cd YTSilentVote
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytnovote.deb  
+          mv packages/*.deb ${{ github.workspace }}/ytnovote.deb
 
       - name: Build YouShare
         run: |
@@ -483,21 +486,14 @@ jobs:
           ls -la tweaks/YouProLangFix
           cd tweaks/YouProLangFix
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb "${{ github.workspace }}/youprolangfix.deb"         
-          
+          mv packages/*.deb "${{ github.workspace }}/youprolangfix.deb"
+
       - name: Build YTVideoErrorAlert
         if: ${{ inputs.ytvid }}
         run: |
           cd YTVideoErrorAlert
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytvideoerror.deb
-
-      # - name: Build VolumeBoostYT
-      #   if: ${{ inputs.volboost }}
-      #   run: |
-      #     cd VolumeBoostYT
-      #     make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
-      #     mv packages/*.deb ${{ github.workspace }}/volboostyt.deb
           
       - name: Inject Tweaks Into IPA
         run: |
@@ -522,11 +518,28 @@ jobs:
           echo "$tweaks"
           cyan -i youtube.ipa -o YouProEXTRA.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b "${{ inputs.bundle_id }}"
 
+      - name: Restore original PlugIns
+        run: |
+          rm -rf patched_ipa
+          unzip -q YouProEXTRA.ipa -d patched_ipa
+
+          rm -rf patched_ipa/Payload/YouTube.app/PlugIns
+          cp -R original_ipa/Payload/YouTube.app/PlugIns patched_ipa/Payload/YouTube.app/PlugIns
+
+          echo "Restored PlugIns:"
+          ls -la patched_ipa/Payload/YouTube.app/PlugIns || true
+
+          cd patched_ipa
+          zip -qry ../YouProEXTRA_fixed.ipa Payload
+          cd ..
+
+          mv YouProEXTRA_fixed.ipa YouProEXTRA.ipa
+
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: youproextra${{ github.run_number }}
-          name: YouProEXTRA (${{ github.run_number }}) 
+          name: YouProEXTRA (${{ github.run_number }})
           files: YouProEXTRA.ipa
           draft: true
 
