@@ -7,7 +7,7 @@
 - Added `Checkout repository`
 - Updated `Get latest commit hashes for all tweaks`
 - Improved `Inject Tweaks Into IPA`
-- Add `YouProLangFix`
+- Add `YouProLangFix - English`
 - Add MB to GB Conversion
   
 ## Version
