@@ -19,8 +19,6 @@ Added extra features just like YTLitePlusEXTRA but for completely free
 - [YTFlags](https://github.com/Tonwalter888/YTFlags) - Tries to make your YouTube experience even better
 - [iSponsorBlock](https://github.com/Galactic-Dev/iSponsorBlock) - Skip sponsorships 
 
-## My Changes
-
 ### ✨ Changes
 
 - Added **Checkout repository** step
