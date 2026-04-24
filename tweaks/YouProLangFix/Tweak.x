@@ -16,7 +16,7 @@ static NSString *YouProEnglishify(NSString *text) {
     if ([text containsString:@"144p"]) return @"144p";
 
     // Title + buttons
-    if ([text isEqualToString:@"جودة التنزيل"]) return @"Download Quality";
+    if ([text isEqualToString:@"جودة التنزيل"]) return @"Download Quality (ខ្មែរ)";
     if ([text isEqualToString:@"تنزيل"]) return @"Download";
     if ([text isEqualToString:@"إلغاء"]) return @"Cancel";
 
