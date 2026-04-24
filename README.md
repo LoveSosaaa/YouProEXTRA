@@ -17,8 +17,7 @@ Added extra features just like YTLitePlusEXTRA but for completely free
 - [YouGetCaption](https://github.com/PoomSmart/YouGetCaption) - Copy video captions from video overlay
 - [YTweaks](https://github.com/fosterbarnes/YTweaks) - Hide AI summary,Fix casting and more
 - [YTFlags](https://github.com/Tonwalter888/YTFlags) - Tries to make your YouTube experience even better
-
-
+- [iSponsorBlock](https://github.com/Galactic-Dev/iSponsorBlock) - Skip sponsorships 
 
 # Credits
 
