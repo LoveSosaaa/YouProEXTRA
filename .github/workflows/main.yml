@@ -249,9 +249,9 @@ jobs:
             YouLoop
             Alderis
             iSponsorBlock
-            YTweaks
+            #YTweaks
             YouGetCaption
-            YTFlags
+            #YTFlags
             IAmYouTube
             DontEatMyContent
             YTVideoErrorAlert
@@ -332,17 +332,17 @@ jobs:
         if: steps.cache_tweaks.outputs.cache-hit != 'true'
         run: git clone --quiet --depth=1 https://github.com/castdrian/Gonerino.git
 
-      - name: Clone YTweaks
-        if: steps.cache_tweaks.outputs.cache-hit != 'true'
-        run: git clone --quiet --depth=1 https://github.com/fosterbarnes/YTweaks.git
+      #- name: Clone YTweaks
+      #  if: steps.cache_tweaks.outputs.cache-hit != 'true'
+      #  run: git clone --quiet --depth=1 https://github.com/fosterbarnes/YTweaks.git
 
       - name: Clone YouGetCaption
         if: steps.cache_tweaks.outputs.cache-hit != 'true'
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouGetCaption.git
         
-      - name: Clone YTFlags
-        if: steps.cache_tweaks.outputs.cache-hit != 'true'
-        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTFlags.git
+      #- name: Clone YTFlags
+      #  if: steps.cache_tweaks.outputs.cache-hit != 'true'
+      #  run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTFlags.git
 
       - name: Clone IAmYouTube
         if: steps.cache_tweaks.outputs.cache-hit != 'true'
@@ -469,17 +469,17 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ygc.deb
 
-      - name: Build YTweaks
-        run: |
-          cd YTweaks
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytweaks.deb
+      #- name: Build YTweaks
+      #  run: |
+      #    cd YTweaks
+      #    make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+      #    mv packages/*.deb ${{ github.workspace }}/ytweaks.deb
 
-      - name: Build YTFlags
-        run: |
-          cd YTFlags
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
+      #- name: Build YTFlags
+      #  run: |
+      #    cd YTFlags
+      #    make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+      #    mv packages/*.deb ${{ github.workspace }}/ytflags.deb
 
       - name: Build YouProLangFix
         run: |
