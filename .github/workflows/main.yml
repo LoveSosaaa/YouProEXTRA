@@ -171,9 +171,9 @@ jobs:
           youspeed=$(git ls-remote https://github.com/PoomSmart/YouSpeed.git HEAD | cut -f1)
           youmute=$(git ls-remote https://github.com/PoomSmart/YouMute.git HEAD | cut -f1)
           youloop=$(git ls-remote https://github.com/bhackel/YouLoop.git HEAD | cut -f1)
-          youtweaks=$(git ls-remote https://github.com/fosterbarnes/YTweaks.git HEAD | cut -f1)
+          #youtweaks=$(git ls-remote https://github.com/fosterbarnes/YTweaks.git HEAD | cut -f1)
           yougetcaption=$(git ls-remote https://github.com/PoomSmart/YouGetCaption.git HEAD | cut -f1)
-          ytflags=$(git ls-remote https://github.com/Tonwalter888/YTFlags.git HEAD | cut -f1)
+          #ytflags=$(git ls-remote https://github.com/Tonwalter888/YTFlags.git HEAD | cut -f1)
           iamyoutube=$(git ls-remote https://github.com/PoomSmart/IAmYouTube.git HEAD | cut -f1)
           demc=$(git ls-remote https://github.com/therealFoxster/DontEatMyContent.git HEAD | cut -f1)
           ytvideoerroralert=$(git ls-remote https://github.com/PoomSmart/YTVideoErrorAlert.git HEAD | cut -f1)
@@ -195,9 +195,9 @@ jobs:
             echo "youspeed=$youspeed"
             echo "youmute=$youmute"
             echo "youloop=$youloop"
-            echo "youtweaks=$youtweaks"
+            #echo "youtweaks=$youtweaks"
             echo "yougetcaption=$yougetcaption"
-            echo "ytflags=$ytflags"
+            #echo "ytflags=$ytflags"
             echo "iamyoutube=$iamyoutube"
             echo "demc=$demc"
             echo "ytvideoerroralert=$ytvideoerroralert"
@@ -220,9 +220,9 @@ jobs:
             echo "youspeed:$youspeed"
             echo "youmute:$youmute"
             echo "youloop:$youloop"
-            echo "youtweaks:$youtweaks"
+            #echo "youtweaks:$youtweaks"
             echo "yougetcaption:$yougetcaption"
-            echo "ytflags:$ytflags"
+            #echo "ytflags:$ytflags"
             echo "iamyoutube:$iamyoutube"
             echo "demc:$demc"
             echo "ytvideoerroralert:$ytvideoerroralert"
