@@ -523,21 +523,31 @@ jobs:
           rm -rf patched_ipa
           unzip -q YouProEXTRA.ipa -d patched_ipa
 
+          # Restore original PlugIns
           rm -rf patched_ipa/Payload/YouTube.app/PlugIns
           if [ -d "original_ipa/Payload/YouTube.app/PlugIns" ]; then
             cp -R original_ipa/Payload/YouTube.app/PlugIns patched_ipa/Payload/YouTube.app/PlugIns
           fi
 
+          # Restore original Extensions
           rm -rf patched_ipa/Payload/YouTube.app/Extensions
           if [ -d "original_ipa/Payload/YouTube.app/Extensions" ]; then
             cp -R original_ipa/Payload/YouTube.app/Extensions patched_ipa/Payload/YouTube.app/Extensions
           fi
 
+          # Restore Safari extension
+          if [ -d "OpenYouTubeSafariExtension.appex" ]; then
+            cp -R OpenYouTubeSafariExtension.appex patched_ipa/Payload/YouTube.app/PlugIns/
+          fi
+    
           echo "Restored PlugIns:"
           ls -la patched_ipa/Payload/YouTube.app/PlugIns || true
 
           echo "Restored Extensions:"
           ls -la patched_ipa/Payload/YouTube.app/Extensions || true
+
+          echo "Safari Extension:"
+          ls -la patched_ipa/Payload/YouTube.app/PlugIns/OpenYouTubeSafariExtension.appex || true
 
           cd patched_ipa
           zip -qry ../YouProEXTRA_fixed.ipa Payload
